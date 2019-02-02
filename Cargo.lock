@@ -1,0 +1,4 @@
+[[package]]
+name = "aws-nomad-spark-autoscaler"
+version = "0.1.0"
+
