@@ -7,6 +7,9 @@ use std::io::Read;
 use std::str::FromStr;
 use structopt::StructOpt;
 
+mod structs;
+use structs::MasterInfo;
+
 #[derive(StructOpt, Debug)]
 #[structopt(name = "Sparkler args (for Spark standalone autoscaler)")]
 struct Args {
@@ -19,44 +22,6 @@ struct Config {
     spark_master_url: String,
 }
 
-#[derive(Deserialize, Debug)]
-struct MasterInfo {
-    completedapps: Vec<CompletedAppsInfo>,
-    workers: Vec<WorkerInfo>,
-    activedrivers: Vec<String>,
-    completeddrivers: Vec<String>,
-    status: String,
-}
-
-#[derive(Deserialize, Debug)]
-struct CompletedAppsInfo {
-    id: String,
-    starttime: u64,
-    name: String,
-    cores: u32,
-    user: String,
-    memoryperslave: u64,
-    submitdate: String,
-    state: String,
-    duration: u64,
-}
-
-#[derive(Deserialize, Debug)]
-struct WorkerInfo {
-    id: String,
-    host: String,
-    port: u16,
-    webuiaddress: String,
-    cores: u32,
-    coresused: u32,
-    coresfree: u32,
-    memory: u64,
-    memoryused: u64,
-    memoryfree: u64,
-    state: String,
-    lastheartbeat: u64,
-}
-
 fn main() -> Result<(), Error> {
     let args = Args::from_args();
 
@@ -66,7 +31,7 @@ fn main() -> Result<(), Error> {
         file.read_to_string(&mut contents)?;
         contents
     })?;
-    
+
     let spark_master_url = reqwest::Url::from_str(&config.spark_master_url)?;
     let spark_master_json_url = spark_master_url.join("/json/")?;
     let spark_master_json_raw = reqwest::get(spark_master_json_url)?.text()?;
@@ -76,7 +41,8 @@ fn main() -> Result<(), Error> {
 
     println!("{:#?}", worker_infos);
 
-    let (total_core_count, core_used_count): (u32, u32) = worker_infos.iter()
+    let (total_core_count, core_used_count): (u32, u32) = worker_infos
+        .iter()
         .map(|w| (w.cores, w.coresused))
         .fold((0, 0), |(tc, cu), (ptc, pcu)| (tc + ptc, cu + pcu));
 
