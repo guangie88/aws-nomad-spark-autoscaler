@@ -1,5 +1,5 @@
 [package]
-name = "aws-nomad-spark-autoscaler"
+name = "sparkler"
 version = "0.1.0"
 authors = ["Chen Weiguang <chen.weiguang@gmail.com>"]
 edition = "2018"
@@ -7,6 +7,14 @@ edition = "2018"
 [dependencies]
 serde = "1.0.86"
 reqwest = "0.9.9"
-envy = "0.3.3"
 serde_derive = "1.0.86"
 serde_json = "1.0.38"
+structopt = "0.2.14"
+toml = "0.4.10"
+failure = "0.1.5"
+
+[workspace]
+
+members = [
+    "aws-nomad"
+]
