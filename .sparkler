@@ -1,2 +1,3 @@
 # Must have the slash at the back
 spark_master_url = "https://spark-master.locus.rocks/"
+period_ms = 1000
