@@ -57,5 +57,12 @@ fn main() -> Result<(), Box<Error>> {
 
     println!("{:#?}", worker_infos);
 
+    let (total_core_count, core_used_count): (u32, u32) = worker_infos.iter()
+        .map(|w| (w.cores, w.coresused))
+        .fold((0, 0), |(tc, cu), (ptc, pcu)| (tc + ptc, cu + pcu));
+
+    println!("Total core count: {}", total_core_count);
+    println!(" Core used count: {}", core_used_count);
+
     Ok(())
 }
