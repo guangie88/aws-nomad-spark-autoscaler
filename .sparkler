@@ -1,4 +1,6 @@
-# Must have the slash at the back
 spark_master_url = "https://spark-master.locus.rocks/"
 period_ms = 1000
-backend = "aws-nomad"
+
+[backend]
+type = "aws-nomad"
+nomad_job_per_aws_ec2 = 1

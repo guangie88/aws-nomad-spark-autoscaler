@@ -1,5 +1,7 @@
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
+extern crate structopt;
 
 use failure::Error;
 use std::fs::File;
@@ -11,22 +13,11 @@ use structopt::StructOpt;
 use tokio::prelude::*;
 use tokio::timer::Interval;
 
+mod config;
+use config::{Args, Config};
+
 mod structs;
-use structs::{Backend, InstanceState, MasterInfo};
-
-#[derive(StructOpt, Debug)]
-#[structopt(name = "Sparkler args (for Spark standalone autoscaler)")]
-struct Args {
-    #[structopt(short = "c", long = "conf", default_value = ".sparkler")]
-    config: String,
-}
-
-#[derive(Deserialize, Debug)]
-struct Config {
-    spark_master_url: String,
-    period_ms: u64,
-    backend: Backend,
-}
+use structs::{InstanceState, MasterInfo};
 
 fn main() -> Result<(), Error> {
     // Initialization section

@@ -65,9 +65,3 @@ pub enum AppState {
     #[serde(rename = "FINISHED")]
     Finished,
 }
-
-#[derive(Deserialize, PartialEq, Debug)]
-pub enum Backend {
-    #[serde(rename = "aws-nomad")]
-    AwsNomad,
-}

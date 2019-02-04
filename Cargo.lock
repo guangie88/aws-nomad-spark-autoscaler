@@ -954,6 +954,7 @@ dependencies = [
 name = "sparkler"
 version = "0.1.0"
 dependencies = [
+ "aws-nomad 0.1.0",
  "failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "reqwest 0.9.9 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.86 (registry+https://github.com/rust-lang/crates.io-index)",
