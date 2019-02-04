@@ -12,7 +12,7 @@ use tokio::prelude::*;
 use tokio::timer::Interval;
 
 mod structs;
-use structs::MasterInfo;
+use structs::{Backend, MasterInfo};
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "Sparkler args (for Spark standalone autoscaler)")]
@@ -25,9 +25,11 @@ struct Args {
 struct Config {
     spark_master_url: String,
     period_ms: u64,
+    backend: Backend,
 }
 
 fn main() -> Result<(), Error> {
+    // Initialization section
     let args = Args::from_args();
 
     let config: Config = toml::from_str(&{
@@ -43,6 +45,7 @@ fn main() -> Result<(), Error> {
     let spark_master_json_url = Arc::new(spark_master_json_url);
     let index = Arc::new(Mutex::new(0 as u64));
 
+    // Tokio section
     let task = Interval::new(Instant::now(), Duration::from_millis(config.period_ms))
         .for_each(move |_instant| {
             let spark_master_json_url = Arc::clone(&spark_master_json_url);
@@ -57,7 +60,7 @@ fn main() -> Result<(), Error> {
 
                 let (total_core_count, core_used_count): (u32, u32) = worker_infos
                     .iter()
-                    .map(|w| (w.cores, w.coresused))
+                    .map(|w| (w.cores, w.cores_used))
                     .fold((0, 0), |(tc, cu), (ptc, pcu)| (tc + ptc, cu + pcu));
 
                 // Possible TODO, poisoned mutex
@@ -77,6 +80,5 @@ fn main() -> Result<(), Error> {
         .map_err(|e| println!("Tokio error: {}", e));
 
     tokio::run(task);
-
     Ok(())
 }
