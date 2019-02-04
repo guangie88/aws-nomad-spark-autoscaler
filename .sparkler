@@ -1,5 +1,6 @@
 spark_master_url = "https://spark-master.locus.rocks/"
 period_ms = 1000
+cores_used_scaling_ratio = 0.5
 
 [backend]
 type = "aws-nomad"

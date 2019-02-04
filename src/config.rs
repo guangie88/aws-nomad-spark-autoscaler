@@ -9,6 +9,7 @@ pub struct Args {
 pub struct Config {
     pub spark_master_url: String,
     pub period_ms: u64,
+    pub cores_used_scaling_ratio: f64,
     pub backend: Backend,
 }
 
