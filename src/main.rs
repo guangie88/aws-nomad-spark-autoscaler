@@ -12,7 +12,7 @@ use tokio::prelude::*;
 use tokio::timer::Interval;
 
 mod structs;
-use structs::{Backend, MasterInfo};
+use structs::{Backend, InstanceState, MasterInfo};
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "Sparkler args (for Spark standalone autoscaler)")]
@@ -50,9 +50,10 @@ fn main() -> Result<(), Error> {
         .for_each(move |_instant| {
             let spark_master_json_url = Arc::clone(&spark_master_json_url);
             let index = Arc::clone(&index);
-            
+
             let invoke = || -> Result<(), Error> {
-                let spark_master_json_raw = reqwest::get((*spark_master_json_url).clone())?.text()?;
+                let spark_master_json_raw =
+                    reqwest::get((*spark_master_json_url).clone())?.text()?;
                 let spark_master_info: MasterInfo = serde_json::from_str(&spark_master_json_raw)?;
                 let worker_infos = &spark_master_info.workers;
 
@@ -60,6 +61,7 @@ fn main() -> Result<(), Error> {
 
                 let (total_core_count, core_used_count): (u32, u32) = worker_infos
                     .iter()
+                    .filter(|w| w.state == InstanceState::Alive)
                     .map(|w| (w.cores, w.cores_used))
                     .fold((0, 0), |(tc, cu), (ptc, pcu)| (tc + ptc, cu + pcu));
 

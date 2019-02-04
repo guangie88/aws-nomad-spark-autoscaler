@@ -7,7 +7,7 @@ pub struct MasterInfo {
     pub active_drivers: Vec<String>,
     #[serde(rename = "completeddrivers")]
     pub completed_drivers: Vec<String>,
-    pub status: String,
+    pub status: InstanceState,
 }
 
 #[derive(Deserialize, Debug)]
@@ -22,7 +22,7 @@ pub struct CompletedAppsInfo {
     pub memory_per_slave: u64,
     #[serde(rename = "submitdate")]
     pub submit_date: String,
-    pub state: String,
+    pub state: AppState,
     pub duration: u64,
 }
 
@@ -43,12 +43,30 @@ pub struct WorkerInfo {
     pub memory_used: u64,
     #[serde(rename = "memoryfree")]
     pub memory_free: u64,
-    pub state: String,
+    pub state: InstanceState,
     #[serde(rename = "lastheartbeat")]
     pub last_heart_beat: u64,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, PartialEq, Debug)]
+pub enum InstanceState {
+    #[serde(rename = "ALIVE")]
+    Alive,
+    #[serde(rename = "DEAD")]
+    Dead,
+}
+
+#[derive(Deserialize, PartialEq, Debug)]
+pub enum AppState {
+    #[serde(rename = "WAITING")]
+    Waiting,
+    #[serde(rename = "RUNNING")]
+    Running,
+    #[serde(rename = "FINISHED")]
+    Finished,
+}
+
+#[derive(Deserialize, PartialEq, Debug)]
 pub enum Backend {
     #[serde(rename = "aws-nomad")]
     AwsNomad,
