@@ -44,7 +44,7 @@ fn check_and_schedule(
             .fold((0, 0), |(tc, cu), (ptc, pcu)| (tc + ptc, cu + pcu));
 
         // Check for scaling to activate
-        let cores_used_ratio = core_used_count as f64 / total_core_count as f64;
+        let cores_used_ratio = f64::from(core_used_count) / f64::from(total_core_count);
         let upscale_ratio = config.cores_used_scaling_ratio;
         let downscale_ratio =
             config.cores_used_scaling_ratio * config.cores_used_scaling_ratio;
@@ -52,15 +52,15 @@ fn check_and_schedule(
         if dbg!(cores_used_ratio >= upscale_ratio) {
             // Scale up
             // TODO
-            // if let Backend::AwsNomad(_) = &config.backend {
-
-            // }
+            match &config.backend {
+                Backend::AwsNomad(_) => unimplemented!(),
+            }
         } else if dbg!(cores_used_ratio < downscale_ratio) {
             // Scale down
             // TODO
-            // if let Backend::AwsNomad(_) = &config.backend {
-
-            // }
+            match &config.backend {
+                Backend::AwsNomad(_) => unimplemented!(),
+            }
         }
 
         // Possible TODO, poisoned mutex
@@ -75,7 +75,8 @@ fn check_and_schedule(
     };
 
     // TODO: Fix unwrap here
-    Ok(invoke().unwrap())
+    invoke().unwrap();
+    Ok(())
 }
 
 fn main() -> Result<(), Error> {
