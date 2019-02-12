@@ -20,6 +20,8 @@ use config::{Args, Backend, Config};
 mod structs;
 use structs::{InstanceState, MasterInfo};
 
+use aws_nomad;
+
 fn check_and_schedule(
     _instant: Instant,
     config: &Config,
@@ -44,7 +46,8 @@ fn check_and_schedule(
             .fold((0, 0), |(tc, cu), (ptc, pcu)| (tc + ptc, cu + pcu));
 
         // Check for scaling to activate
-        let cores_used_ratio = f64::from(core_used_count) / f64::from(total_core_count);
+        let cores_used_ratio =
+            f64::from(core_used_count) / f64::from(total_core_count);
         let upscale_ratio = config.cores_used_scaling_ratio;
         let downscale_ratio =
             config.cores_used_scaling_ratio * config.cores_used_scaling_ratio;
@@ -53,13 +56,17 @@ fn check_and_schedule(
             // Scale up
             // TODO
             match &config.backend {
-                Backend::AwsNomad(_) => unimplemented!(),
+                Backend::AwsNomad(ref config) => {
+                    aws_nomad::scale_up(config)?;
+                }
             }
         } else if dbg!(cores_used_ratio < downscale_ratio) {
             // Scale down
             // TODO
             match &config.backend {
-                Backend::AwsNomad(_) => unimplemented!(),
+                Backend::AwsNomad(ref config) => {
+                    aws_nomad::scale_down(config)?;
+                }
             }
         }
 

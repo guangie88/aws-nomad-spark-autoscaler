@@ -1,3 +1,5 @@
+use aws_nomad::AwsNomadBackend;
+
 #[derive(StructOpt, Debug)]
 #[structopt(name = "Sparkler args (for Spark standalone autoscaler)")]
 pub struct Args {
@@ -18,9 +20,4 @@ pub struct Config {
 pub enum Backend {
     #[serde(rename = "aws-nomad")]
     AwsNomad(AwsNomadBackend),
-}
-
-#[derive(Deserialize, Debug)]
-pub struct AwsNomadBackend {
-    nomad_job_per_aws_ec2: u32,
 }

@@ -6,9 +6,9 @@ edition = "2018"
 
 [dependencies]
 aws-nomad = { path = "aws-nomad" }
-serde = "1.0.86"
 reqwest = "0.9.9"
-serde_derive = "1.0.86"
+serde = "1.0.87"
+serde_derive = "1.0.87"
 serde_json = "1.0.38"
 structopt = "0.2.14"
 toml = "0.4.10"
@@ -16,7 +16,6 @@ failure = "0.1.5"
 tokio = "0.1.15"
 
 [workspace]
-
 members = [
     "aws-nomad"
 ]
