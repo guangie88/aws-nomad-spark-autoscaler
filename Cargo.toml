@@ -14,6 +14,7 @@ structopt = "0.2.14"
 toml = "0.4.10"
 failure = "0.1.5"
 tokio = "0.1.15"
+json-query = "0.1.1"
 
 [workspace]
 members = [

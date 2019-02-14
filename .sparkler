@@ -1,7 +1,13 @@
-spark_master_url = "https://spark-master.locus.rocks/"
+spark_master_url = "https://sm.locus.rocks/"
 period_ms = 1000
 cores_used_scaling_ratio = 0.5
 
 [backend]
 type = "aws-nomad"
+nomad_url = "https://nomad.locus.rocks"
+nomad_job_name = "spark-worker"
 nomad_job_per_aws_ec2 = 1
+
+[backend.scaling_mode]
+type = "doubling"
+# value = 
